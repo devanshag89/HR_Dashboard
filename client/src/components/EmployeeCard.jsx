@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useBookmarks } from "../context/BookmarkContext";
 
 const EmployeeCard = ({ user }) => {
   const { addBookmark } = useBookmarks();
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const handleBookmarkClick = () => {
+    addBookmark(user);
+    setBookmarked(true);
+  };
 
   return (
     <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6 border border-gray-100 hover:border-emerald-200 overflow-hidden">
@@ -74,13 +81,17 @@ const EmployeeCard = ({ user }) => {
           </Link>
           
           <button 
-            onClick={() => addBookmark(user)} 
-            className="flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
+            onClick={handleBookmarkClick}
+            className={`flex items-center justify-center gap-1 px-3 py-2 text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95 ${
+              bookmarked 
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white' 
+                : 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white'
+            }`}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
             </svg>
-            Bookmark
+            {bookmarked ? 'Bookmarked' : 'Bookmark'}
           </button>
           
         </div>

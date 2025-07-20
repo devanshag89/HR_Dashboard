@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import EmployeeCard from '../components/EmployeeCard';
 import { useSearch } from '../hooks/useSearch';
-import { useEmployeeContext } from '../context/EmployeeProvider';
+import { useEmployeeContext } from '../context/EmployeeContext';
 
 export default function Dashboard() {
   const [users, setUsers] = useState([]);
