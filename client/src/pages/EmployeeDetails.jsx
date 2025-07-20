@@ -1,36 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Mail, Phone, MapPin, Building, User, Star, Briefcase, Calendar, Eye, Weight, Droplets, GraduationCap, CreditCard, Shield } from 'lucide-react';
+import { Mail, Phone, MapPin, Building, User, Star, Briefcase, Calendar, Eye, Weight, Droplets, Shield } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { useEmployeeContext } from '../context/EmployeeContext';
 
 export default function EmployeeDetails() {
-  const id = 1; // Demo with user ID 1
+  const { employees } = useEmployeeContext();
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    fetch(`https://dummyjson.com/users/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        data.rating = Math.ceil(Math.random() * 5);
-        // Generate mock performance history based on rating
-        data.performanceHistory = generatePerformanceHistory(data.rating);
-        setUser(data);
-      });
-  }, [id]);
-
-  const generatePerformanceHistory = (currentRating) => {
-    const quarters = ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024'];
-    return quarters.map((quarter, index) => {
-      const variation = (Math.random() - 0.5) * 2; // -1 to 1
-      let rating = Math.max(1, Math.min(5, currentRating + variation));
-      rating = Math.round(rating * 2) / 2; // Round to nearest 0.5
-      
-      return {
-        period: quarter,
-        rating: rating,
-        status: rating >= 4 ? 'Excellent' : rating >= 3 ? 'Good' : rating >= 2 ? 'Satisfactory' : 'Needs Improvement'
-      };
-    });
-  };
+    // Find employee from the employees array instead of fetching
+    const foundEmployee = employees.find(emp => emp.id === parseInt(id));
+    if (foundEmployee) {
+      setUser(foundEmployee);
+    }
+  }, [id, employees]);
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: User },
@@ -242,7 +227,7 @@ export default function EmployeeDetails() {
               </div>
             </div>
 
-            {/* Performance History */}
+            {/* Performance Rating */}
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-orange-500/5 to-red-500/5"></div>
               <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-b-3xl"></div>
@@ -252,38 +237,7 @@ export default function EmployeeDetails() {
                   <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-3 rounded-2xl shadow-lg">
                     <Star className="w-6 h-6" />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-800">Performance History</h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                  {user.performanceHistory.map((period, index) => (
-                    <div key={index} className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200/50">
-                      <p className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">{period.period}</p>
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="flex gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i < period.rating
-                                  ? 'text-amber-400 fill-amber-400'
-                                  : 'text-slate-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-lg font-bold text-slate-800">{period.rating}</span>
-                      </div>
-                      <p className={`text-xs font-medium px-2 py-1 rounded-full ${
-                        period.rating >= 4 ? 'bg-green-100 text-green-700' :
-                        period.rating >= 3 ? 'bg-blue-100 text-blue-700' :
-                        period.rating >= 2 ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-red-100 text-red-700'
-                      }`}>
-                        {period.status}
-                      </p>
-                    </div>
-                  ))}
+                  <h3 className="text-2xl font-bold text-slate-800">Performance Rating</h3>
                 </div>
                 
                 {/* Current Rating */}

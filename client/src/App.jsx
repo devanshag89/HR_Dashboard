@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Analytics from './pages/Analytics';

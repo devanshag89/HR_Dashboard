@@ -13,11 +13,11 @@ const EmployeeCard = ({ user }) => {
 
   return (
     <div className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-6 border border-gray-100 hover:border-emerald-200 overflow-hidden">
-      {/* Subtle hover overlay */}
+      
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/60 to-teal-100/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
       <div className="relative z-10">
-        {/* Header Section */}
+        
         <div className="flex items-center gap-4 mb-6">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
@@ -38,7 +38,6 @@ const EmployeeCard = ({ user }) => {
           </div>
         </div>
 
-        {/* Info Section */}
         <div className="grid grid-cols-2 gap-4 mb-5">
           <div className="text-center bg-gray-50 group-hover:bg-emerald-50 rounded-xl p-3 transition-colors duration-300">
             <p className="text-xs text-emerald-600 uppercase tracking-wide font-semibold mb-1">Age</p>
@@ -50,7 +49,6 @@ const EmployeeCard = ({ user }) => {
           </div>
         </div>
 
-        {/* Rating Section */}
         <div className="mb-6">
           <div className="flex items-center justify-center gap-1 bg-gray-50 group-hover:bg-amber-50 rounded-xl p-3 transition-colors duration-300">
             {Array.from({ length: user.rating }).map((_, i) => (
@@ -67,7 +65,7 @@ const EmployeeCard = ({ user }) => {
           </div>
         </div>
 
-        {/* Action Buttons */}
+     
         <div className="grid grid-cols-2 gap-2">
           <Link 
             to={`/employee/${user.id}`} 
