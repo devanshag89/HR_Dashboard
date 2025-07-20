@@ -67,14 +67,16 @@ export default function BookMarks() {
                 {/* Background decoration */}
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
-                {/* Remove button */}
-                <button
-                  onClick={() => removeBookmark(user.id)}
-                  className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm text-red-500 hover:text-white hover:bg-red-500 p-2 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
-                  title="Remove bookmark"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {/* Remove button - Larger hover area to prevent blinking */}
+                <div className="absolute top-2 right-2 z-10 p-2">
+                  <button
+                    onClick={() => removeBookmark(user.id)}
+                    className="bg-white/90 backdrop-blur-sm text-red-500 p-2 rounded-full shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white"
+                    title="Remove bookmark"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
 
                 {/* Bookmark indicator */}
                 <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-2 rounded-full shadow-lg">
@@ -84,14 +86,6 @@ export default function BookMarks() {
                 {/* Employee Card Content */}
                 <div className="relative">
                   <EmployeeCard user={user} />
-                </div>
-
-                {/* Bookmarked badge */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 backdrop-blur-sm border border-pink-200/50 rounded-full px-3 py-1 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Heart className="w-3 h-3 text-pink-600 mr-1 fill-current" />
-                    <span className="text-xs font-medium text-pink-700">Bookmarked</span>
-                  </div>
                 </div>
               </div>
             ))}
