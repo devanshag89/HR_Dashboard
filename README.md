@@ -55,13 +55,13 @@ A modern, responsive HR dashboard built with **React.js** and **Tailwind CSS** t
 
 ## 📁 Project Structure
 
-src/
+``` src/
 ├── components/ # Reusable UI components
 ├── context/ # Global state (Bookmarks, Employees)
 ├── hooks/ # Contains custom hooks
 ├── pages/ # Routed views
 ├── App.jsx # Main layout and routes
-└── main.jsx # Entry point
+└── main.jsx # Entry point ```
 
 
 ---
