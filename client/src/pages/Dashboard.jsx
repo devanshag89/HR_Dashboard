@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import EmployeeCard from '../components/EmployeeCard';
-import { useSearch } from '../hooks/useSearch'; // Import your custom hook
+import { useSearch } from '../hooks/useSearch';
+import { useEmployeeContext } from '../context/EmployeeProvider';
 
 export default function Dashboard() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Use the custom search hook
+  const {setEmployees} = useEmployeeContext();
   const {
     searchTerm,
     departmentFilters,
@@ -28,9 +28,10 @@ export default function Dashboard() {
       .then(data => {
         const modified = data.users.map(user => ({
           ...user,
-          rating: Math.ceil(Math.random() * 5) // mock performance
+          rating: Math.ceil(Math.random() * 5) 
         }));
         setUsers(modified);
+        setEmployees(modified);
         setLoading(false);
       })
       .catch(error => {
@@ -51,9 +52,10 @@ export default function Dashboard() {
     <div className="p-6">
       {/* Search and Filter Section */}
       <div className="mb-8 space-y-4">
-        {/* Search Bar */}
-        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-          <div className="relative flex-1 max-w-md">
+        {/* Single Line Layout for Large Screens */}
+        <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+          {/* Search Bar */}
+          <div className="relative flex-1 max-w-none lg:max-w-md">
             <input
               type="text"
               placeholder="Search by name, email, or department..."
@@ -71,98 +73,100 @@ export default function Dashboard() {
             </svg>
           </div>
 
+          {/* Filter Dropdowns Container */}
+          <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 min-w-0">
+            {/* Department Filter */}
+            <div className="relative flex-shrink-0">
+              <div className="group">
+                <button className="flex items-center justify-center sm:justify-start gap-2 px-4 py-3 w-full sm:w-auto bg-white border border-gray-200 rounded-lg hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <span className="text-sm font-medium">Department</span>
+                  {departmentFilters.length > 0 && (
+                    <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full flex-shrink-0">
+                      {departmentFilters.length}
+                    </span>
+                  )}
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-20">
+                  <div className="p-2 max-h-60 overflow-y-auto">
+                    {departments.map(department => (
+                      <label key={department} className="flex items-center gap-3 p-2 hover:bg-blue-50 rounded cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={departmentFilters.includes(department)}
+                          onChange={() => toggleDepartmentFilter(department)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 flex-shrink-0"
+                        />
+                        <span className="text-sm text-gray-700 truncate">{department}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Rating Filter */}
+            <div className="relative flex-shrink-0">
+              <div className="group">
+                <button className="flex items-center justify-center sm:justify-start gap-2 px-4 py-3 w-full sm:w-auto bg-white border border-gray-200 rounded-lg hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                  <svg className="w-4 h-4 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                  </svg>
+                  <span className="text-sm font-medium">Rating</span>
+                  {ratingFilters.length > 0 && (
+                    <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full flex-shrink-0">
+                      {ratingFilters.length}
+                    </span>
+                  )}
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-20">
+                  <div className="p-2">
+                    {ratings.map(rating => (
+                      <label key={rating} className="flex items-center gap-3 p-2 hover:bg-blue-50 rounded cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={ratingFilters.includes(rating)}
+                          onChange={() => toggleRatingFilter(rating)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 flex-shrink-0"
+                        />
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: rating }).map((_, i) => (
+                            <span key={i} className="text-yellow-400">⭐</span>
+                          ))}
+                          <span className="text-sm text-gray-600 ml-1">({rating})</span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Clear Filters Button */}
           {activeFiltersCount > 0 && (
-            <button
-              onClick={clearFilters}
-              className="px-4 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors duration-200 flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Clear Filters ({activeFiltersCount})
-            </button>
+            <div className="flex-shrink-0">
+              <button
+                onClick={clearFilters}
+                className="px-4 py-3 w-full lg:w-auto text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 border border-transparent hover:border-blue-200"
+              >
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span className="font-medium">Clear ({activeFiltersCount})</span>
+              </button>
+            </div>
           )}
-        </div>
-
-        {/* Filter Dropdowns */}
-        <div className="flex flex-wrap gap-4">
-          {/* Department Filter */}
-          <div className="relative">
-            <div className="group">
-              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-                Department
-                {departmentFilters.length > 0 && (
-                  <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
-                    {departmentFilters.length}
-                  </span>
-                )}
-                <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-10">
-                <div className="p-2 max-h-60 overflow-y-auto">
-                  {departments.map(department => (
-                    <label key={department} className="flex items-center gap-3 p-2 hover:bg-blue-50 rounded cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={departmentFilters.includes(department)}
-                        onChange={() => toggleDepartmentFilter(department)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700 truncate">{department}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Rating Filter */}
-          <div className="relative">
-            <div className="group">
-              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-                <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                </svg>
-                Rating
-                {ratingFilters.length > 0 && (
-                  <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
-                    {ratingFilters.length}
-                  </span>
-                )}
-                <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-10">
-                <div className="p-2">
-                  {ratings.map(rating => (
-                    <label key={rating} className="flex items-center gap-3 p-2 hover:bg-blue-50 rounded cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={ratingFilters.includes(rating)}
-                        onChange={() => toggleRatingFilter(rating)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: rating }).map((_, i) => (
-                          <span key={i} className="text-yellow-400">⭐</span>
-                        ))}
-                        <span className="text-sm text-gray-600 ml-1">({rating})</span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -174,21 +178,23 @@ export default function Dashboard() {
       </div>
 
       {/* Employee Cards Grid */}
-      {filteredData.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredData.map(user => (
-            <EmployeeCard key={user.id} user={user} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-12">
-          <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No employees found</h3>
-          <p className="text-gray-500">Try adjusting your search or filters</p>
-        </div>
-      )}
+      <div className="relative">
+        {filteredData.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+            {filteredData.map(user => (
+              <EmployeeCard key={user.id} user={user} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No employees found</h3>
+            <p className="text-gray-500">Try adjusting your search or filters</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
