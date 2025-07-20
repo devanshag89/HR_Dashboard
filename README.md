@@ -4,7 +4,7 @@
 
 A modern, responsive HR dashboard built with **React.js** and **Tailwind CSS** that allows HR managers to view, manage, and analyze employee performance data.
 
-🔗 **Live Demo**: [View Dashboard](https://your-live-link.netlify.app)
+🔗 **Live Demo**: [View Dashboard](https://hr-dashboard-s0r9.onrender.com/)
 
 ---
 
@@ -53,5 +53,28 @@ A modern, responsive HR dashboard built with **React.js** and **Tailwind CSS** t
 - **Chart.js** (via `react-chartjs-2`)
 - **Context API** for state management
 
+## 📁 Project Structure
+
+src/
+├── components/ # Reusable UI components
+├── context/ # Global state (Bookmarks)
+├── hooks/ # Contains custom hooks
+├── pages/ # Routed views
+├── App.jsx # Main layout and routes
+└── main.jsx # Entry point
+
+
+---
+
+## 🧑‍💻 Getting Started
+
+### 1. Clone the Repo
+
+```bash
+git clone https://github.com/devanshag89/HR_Dashboard.git
+cd HR_Dashboard
+cd client
+npm install
+npm run dev
 
 
