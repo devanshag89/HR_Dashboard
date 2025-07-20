@@ -23,7 +23,7 @@ A modern, responsive HR dashboard built with **React.js** and **Tailwind CSS** t
   - Bookmark
 
 ### 🔍 Search & Filter *(planned enhancement)*
-- Search by name/email
+- Search by name/email/department
 - Filter by department or rating
 
 ### 👤 Employee Details Page
@@ -41,7 +41,7 @@ A modern, responsive HR dashboard built with **React.js** and **Tailwind CSS** t
 
 ### 📊 Analytics Page
 - Chart.js integration
-- Shows department-wise average ratings (mock)
+- Shows department-wise average ratings
 
 ---
 
@@ -57,7 +57,7 @@ A modern, responsive HR dashboard built with **React.js** and **Tailwind CSS** t
 
 src/
 ├── components/ # Reusable UI components
-├── context/ # Global state (Bookmarks)
+├── context/ # Global state (Bookmarks, Employees)
 ├── hooks/ # Contains custom hooks
 ├── pages/ # Routed views
 ├── App.jsx # Main layout and routes
